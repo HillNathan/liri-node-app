@@ -1,5 +1,7 @@
 require("dotenv").config();
-var keys = require("./keys.js");
+const keys = require("./keys.js");
+const moment = require("moment")
+const axios = require("axios")
 
 const goodCommands = ['concert-this', 'spotify-this-song', 'movie-this', 'do-what-it-says'];
 
