@@ -34,6 +34,10 @@ inquirer.prompt([
                         default: true }
                     ]).then(finalResponse => {     
                         if (finalResponse.confirm) {
+                            let logStr = `${inqResponse.module},${searchResponse.searchTerm}`
+                            fs.appendFile("log.txt", logStr, function(err) {
+                                if (err) return console.log(err)
+                            })
                             switch (inqResponse.module) {
                                 case 'Concerts': 
                                     getMeConcert(searchResponse.searchTerm)
@@ -82,12 +86,17 @@ const getMeConcert = artistName => {
     let theURL = `https://rest.bandsintown.com/artists/${artistName}/events?app_id=codingbootcamp&date=upcoming`
     axios.get(theURL)
         .then(results => {
-            results.data.forEach(element => {
-                console.log(`Venue Name: ${element.venue.name}`)
-                console.log(`Venue Location: ${element.venue.city}, ${element.venue.region}`)
-                console.log(`Concert Date: ${moment(element.datetime).format('MM/DD/YYYY')}`)
-                console.log('===============================================')
-            })
+            console.log(results.data.length)
+            if (results.data.length > 0) {      
+                results.data.forEach(element => {
+                    console.log(`Venue Name: ${element.venue.name}`)
+                    console.log(`Venue Location: ${element.venue.city}, ${element.venue.region}`)
+                    console.log(`Concert Date: ${moment(element.datetime).format('MM/DD/YYYY')}`)
+                    console.log('===============================================')
+                })
+            } else {
+                console.log(`No upcoming concerts for ${artistName}.`)
+            }
         }).catch(err => {
             console.log('catch function')
             console.log(err.response.data.errorMessage)
